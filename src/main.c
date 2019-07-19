@@ -6,12 +6,14 @@
 void test_dlist();
 void test_stack();
 void test_queue();
+void test_table();
 
 int main(int argc, char **argv)
 {
 	test_dlist();
 	test_stack();
 	test_queue();
+	test_table();
 	return 0;
 }
 
@@ -116,4 +118,27 @@ void test_queue()
 		(char *)tz_queue_pop(q), 
 		(char *)tz_queue_peek(q), 
 		(char *)tz_queue_pop(q));
+	tz_queue_free(q);
+}
+
+void test_table()
+{
+	tz_table *t = tz_table_init(NULL, NULL);
+	assert(t);
+
+	assert(tz_table_store(t, "part1", "hello"));
+	assert(tz_table_store(t, "part2", ", "));
+	assert(tz_table_store(t, "junk!!!", "this is some junk!!"));
+	assert(tz_table_store(t, "part3", "world!"));
+	assert(!tz_table_store(t, "part2", "this won't insert!"));
+
+	assert(tz_table_rm(t, "junk!!!"));
+	assert(!tz_table_fetch(t, "junk!!!"));
+
+	printf("test_table(): %s%s%s\n",
+		tz_table_fetch(t, "part1"), 
+		tz_table_fetch(t, "part2"),
+		tz_table_fetch(t, "part3"));
+
+	tz_table_free(t);
 }

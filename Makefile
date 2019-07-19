@@ -33,4 +33,4 @@ clean:
 	rm -rf $(OBJECTS) $(TEST_OBJ) $(TARGET)
 test: all
 	./$(TEST)
-	make clean
+	make -s clean
