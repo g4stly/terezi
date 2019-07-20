@@ -166,7 +166,7 @@ void test_btree()
 	delete_me = tz_btree_ins_right(t, node, "world!\n");
 	assert(delete_me && t->size == 3);
 
-	assert(node = tz_btree_ins_left(t, delete_me, "test_"));
+	assert((node = tz_btree_ins_left(t, delete_me, "test_")));
 	assert(tz_btree_ins_left(t, node, "btr"));
 	assert(tz_btree_ins_right(t, node, "ee(): "));
 

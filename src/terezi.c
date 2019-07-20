@@ -1,6 +1,5 @@
 #include <terezi.h>
 #include <stdlib.h>
-#include <stdio.h>
 #include <string.h>
 #include "util.h"
 
@@ -399,27 +398,22 @@ tz_btree *tz_btree_init(
 	return t;
 }
 
-static void _tz_btree_free(tz_btree *t, tz_btree_node *n)
+static void _tz_btree_free(tz_btree *t, tz_btree_node **n)
 {
 	if (!t || !n) return;
-	if (t->destroy) t->destroy(n->data);
-	if (n->left) {
-		_tz_btree_free(t, n->left);
-		n->left = NULL;
-	}
-	if (n->right) {
-		_tz_btree_free(t, n->right);
-		n->right = NULL;
-	}
+	if (t->destroy) t->destroy((*n)->data);
+	if ((*n)->left) _tz_btree_free(t, &(*n)->left);
+	if ((*n)->right) _tz_btree_free(t, &(*n)->right);
 	
+	free(*n);
+	*n = NULL;
 	t->size--;
-	free(n);
 }
 
 void tz_btree_free(tz_btree *t)
 {
 	if (!t) return;
-	_tz_btree_free(t, t->root);
+	_tz_btree_free(t, &t->root);
 	free(t);
 }
 
@@ -466,15 +460,13 @@ tz_btree_node *tz_btree_ins_right(
 int tz_btree_del_left(tz_btree *t, tz_btree_node *p)
 {
 	if (!t || !p || !p->left) return 0;
-	_tz_btree_free(t, p->left);
-	p->left = NULL;
+	_tz_btree_free(t, &p->left);
 	return 1;
 }
 
 int tz_btree_del_right(tz_btree *t, tz_btree_node *p)
 {
 	if (!t || !p || !p->right) return 0;
-	_tz_btree_free(t, p->right);
-	p->right = NULL;
+	_tz_btree_free(t, &p->right);
 	return 1;
 }
