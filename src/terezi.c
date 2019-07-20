@@ -1,5 +1,6 @@
 #include <terezi.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include "util.h"
 
@@ -381,3 +382,99 @@ void *tz_table_rm(tz_table *t, const char *key)
 	return rv;
 }
 
+/*\
+ * Binary Tree
+ * ... this one could be a little more elegant :/
+\*/
+
+tz_btree *tz_btree_init(
+	int (*compare)(const void *key1, const void *key2),
+	void (*destroy)(void *data))
+{
+	tz_btree *t = malloc(sizeof(tz_btree));
+	if (!t) die("tz_btree_init(): malloc():");
+	memset(t, 0, sizeof(tz_btree));
+
+	t->destroy = destroy;
+	return t;
+}
+
+static void _tz_btree_free(tz_btree *t, tz_btree_node *n)
+{
+	if (!t || !n) return;
+	if (t->destroy) t->destroy(n->data);
+	if (n->left) {
+		_tz_btree_free(t, n->left);
+		n->left = NULL;
+	}
+	if (n->right) {
+		_tz_btree_free(t, n->right);
+		n->right = NULL;
+	}
+	
+	t->size--;
+	free(n);
+}
+
+void tz_btree_free(tz_btree *t)
+{
+	if (!t) return;
+	_tz_btree_free(t, t->root);
+	free(t);
+}
+
+static tz_btree_node *new_tz_btree_node(tz_btree *t, void *data)
+{
+	tz_btree_node *n = malloc(sizeof(tz_btree_node));
+	if (!n) die("tz_btree_ins_left(): malloc():");
+	memset(n, 0, sizeof(tz_btree_node));
+
+	n->data = data;
+	t->size++;
+
+	return n;
+}
+
+tz_btree_node *tz_btree_ins_left(
+	tz_btree *t, 
+	tz_btree_node *p, 
+	void *data)
+{
+	if (!t || (!p && t->root)) return NULL;
+
+	tz_btree_node *n = new_tz_btree_node(t, data);
+	if (p) p->left = n;
+	else t->root = n;
+
+	return n;
+}
+
+tz_btree_node *tz_btree_ins_right(
+	tz_btree *t,
+	tz_btree_node *p,
+	void *data)
+{
+	if (!t || (!p && t->root)) return NULL;
+
+	tz_btree_node *n = new_tz_btree_node(t, data);
+	if (p) p->right = n;
+	else t->root = n;
+
+	return n;
+}
+
+int tz_btree_del_left(tz_btree *t, tz_btree_node *p)
+{
+	if (!t || !p || !p->left) return 0;
+	_tz_btree_free(t, p->left);
+	p->left = NULL;
+	return 1;
+}
+
+int tz_btree_del_right(tz_btree *t, tz_btree_node *p)
+{
+	if (!t || !p || !p->right) return 0;
+	_tz_btree_free(t, p->right);
+	p->right = NULL;
+	return 1;
+}

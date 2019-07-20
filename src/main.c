@@ -7,6 +7,7 @@ void test_dlist();
 void test_stack();
 void test_queue();
 void test_table();
+void test_btree();
 
 int main(int argc, char **argv)
 {
@@ -14,6 +15,7 @@ int main(int argc, char **argv)
 	test_stack();
 	test_queue();
 	test_table();
+	test_btree();
 	return 0;
 }
 
@@ -136,9 +138,38 @@ void test_table()
 	assert(!tz_table_fetch(t, "junk!!!"));
 
 	printf("test_table(): %s%s%s\n",
-		tz_table_fetch(t, "part1"), 
-		tz_table_fetch(t, "part2"),
-		tz_table_fetch(t, "part3"));
+		(char *)tz_table_fetch(t, "part1"), 
+		(char *)tz_table_fetch(t, "part2"),
+		(char *)tz_table_fetch(t, "part3"));
 
 	tz_table_free(t);
+}
+
+void speak_and_destroy(void *data)
+{
+	printf((char *)data);
+}
+
+void test_btree()
+{
+	tz_btree *t = tz_btree_init(NULL, speak_and_destroy);
+	assert(t);
+
+	tz_btree_node *node = tz_btree_ins_left(t, NULL, "hello");
+	assert(node && t->size == 1);
+	assert(!tz_btree_ins_left(t, NULL, "junk"));
+
+	node = tz_btree_ins_left(t, node, ", ");
+	assert(node && t->size == 2);
+
+	tz_btree_node *delete_me;
+	delete_me = tz_btree_ins_right(t, node, "world!\n");
+	assert(delete_me && t->size == 3);
+
+	assert(node = tz_btree_ins_left(t, delete_me, "test_"));
+	assert(tz_btree_ins_left(t, node, "btr"));
+	assert(tz_btree_ins_right(t, node, "ee(): "));
+
+	assert(tz_btree_del_left(t, delete_me) && t->size == 3);
+	tz_btree_free(t);
 }

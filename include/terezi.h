@@ -100,4 +100,38 @@ int tz_table_store(tz_table *t, const char *key, void *data);
 void *tz_table_fetch(tz_table *t, const char *key);
 void *tz_table_rm(tz_table *t, const char *key);
 
+/*\
+ * Binary Tree
+\*/
+
+typedef struct tz_btree_node {
+	void *data;
+	struct tz_btree_node *left;
+	struct tz_btree_node *right;
+} tz_btree_node;
+
+typedef struct tz_btree {
+	int size;
+	int (*compare)(const void *key1, const void *key2);
+	void (*destroy)(void *data);
+	tz_btree_node *root;
+} tz_btree;
+
+tz_btree *tz_btree_init(
+	int (*compare)(const void *key1, const void *key2),
+	void (*destroy)(void *data));
+void tz_btree_free(tz_btree *tree);
+
+tz_btree_node *tz_btree_ins_left(
+	tz_btree *tree, 
+	tz_btree_node *node, 
+	void *data);
+tz_btree_node *tz_btree_ins_right(
+	tz_btree *tree,
+	tz_btree_node *node,
+	void *data);
+
+int tz_btree_del_left(tz_btree *tree, tz_btree_node *node);
+int tz_btree_del_right(tz_btree *tree, tz_btree_node *node);
+
 #endif
