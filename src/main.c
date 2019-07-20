@@ -172,4 +172,51 @@ void test_btree()
 
 	assert(tz_btree_del_left(t, delete_me) && t->size == 3);
 	tz_btree_free(t);
+
+	/*
+	t = tz_btree_init(NULL, NULL);
+	tz_btree_node *root = tz_btree_ins_left(t, NULL, "root");
+	tz_btree_node *a = tz_btree_ins_left(t, root, "a");
+	tz_btree_node *b = tz_btree_ins_right(t, root, "b");
+	tz_btree_node *c = tz_btree_ins_left(t, a, "c");
+	tz_btree_node *d = tz_btree_ins_right(t, a, "d");
+	tz_btree_node *e = tz_btree_ins_left(t, b, "e");
+	tz_btree_node *f = tz_btree_ins_right(t, b, "f");
+	tz_btree_node *g = tz_btree_ins_left(t, c, "g");
+	tz_btree_node *h = tz_btree_ins_right(t, c, "h");
+	tz_btree_node *i = tz_btree_ins_left(t, d, "i");
+	tz_btree_node *j = tz_btree_ins_right(t, d, "j");
+
+	tz_dlist *list;
+	tz_dlist_node *lnode;
+
+	list = tz_btree_traverse_preorder(t);
+	lnode = list->head;
+	while (lnode) {
+		printf("%s", lnode->data);
+		lnode = lnode->next;
+	}
+	tz_dlist_free(list);
+	printf("\n");
+
+	list = tz_btree_traverse_inorder(t);
+	lnode = list->head;
+	while (lnode) {
+		printf("%s", lnode->data);
+		lnode = lnode->next;
+	}
+	tz_dlist_free(list);
+	printf("\n");
+
+	list = tz_btree_traverse_postorder(t);
+	lnode = list->head;
+	while (lnode) {
+		printf("%s", lnode->data);
+		lnode = lnode->next;
+	}
+	tz_dlist_free(list);
+	printf("\n");
+	*/
+
+	tz_btree_free(t);
 }

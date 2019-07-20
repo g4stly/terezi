@@ -470,3 +470,48 @@ int tz_btree_del_right(tz_btree *t, tz_btree_node *p)
 	_tz_btree_free(t, &p->right);
 	return 1;
 }
+
+static void _btree_traverse_preorder(tz_btree_node *n, tz_dlist *l)
+{	// do we null check here?
+	tz_dlist_ins_next(l, l->tail, n->data);
+	if (n->left) _btree_traverse_preorder(n->left, l);
+	if (n->right) _btree_traverse_preorder(n->right, l);
+}
+
+tz_dlist *tz_btree_traverse_preorder(tz_btree *t)
+{
+	if (!t) return NULL;
+	tz_dlist *l = tz_dlist_init(NULL);
+	_btree_traverse_preorder(t->root, l);
+	return l;
+}
+
+static void _btree_traverse_inorder(tz_btree_node *n, tz_dlist *l)
+{	
+	if (n->left) _btree_traverse_inorder(n->left, l);
+	tz_dlist_ins_next(l, l->tail, n->data);
+	if (n->right) _btree_traverse_inorder(n->right, l);
+}
+
+tz_dlist *tz_btree_traverse_inorder(tz_btree *t)
+{
+	if (!t) return NULL;
+	tz_dlist *l = tz_dlist_init(NULL);
+	_btree_traverse_inorder(t->root, l);
+	return l;
+}
+
+static void _btree_traverse_postorder(tz_btree_node *n, tz_dlist *l)
+{	
+	if (n->left) _btree_traverse_postorder(n->left, l);
+	if (n->right) _btree_traverse_postorder(n->right, l);
+	tz_dlist_ins_next(l, l->tail, n->data);
+}
+
+tz_dlist *tz_btree_traverse_postorder(tz_btree *t)
+{
+	if (!t) return NULL;
+	tz_dlist *l = tz_dlist_init(NULL);
+	_btree_traverse_postorder(t->root, l);
+	return l;
+}

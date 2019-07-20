@@ -134,4 +134,9 @@ tz_btree_node *tz_btree_ins_right(
 int tz_btree_del_left(tz_btree *tree, tz_btree_node *node);
 int tz_btree_del_right(tz_btree *tree, tz_btree_node *node);
 
+tz_dlist *tz_btree_traverse_preorder(tz_btree *tree);
+tz_dlist *tz_btree_traverse_inorder(tz_btree *tree);
+tz_dlist *tz_btree_traverse_postorder(tz_btree *tree);
+tz_dlist *tz_btree_traverse_levelorder(tz_btree *tree);
+
 #endif
