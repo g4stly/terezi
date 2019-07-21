@@ -156,11 +156,11 @@ void test_btree()
 	tz_btree *a = tz_btree_ins_left(t, "ll");
 	tz_btree *b = tz_btree_ins_right(t, "rl");
 	tz_btree *c = tz_btree_ins_left(a, "o,");
-	tz_btree *d = tz_btree_ins_left(c, " wo");
+	assert(tz_btree_ins_left(c, " wo"));
 	tz_btree *delete = tz_btree_ins_left(b, "test");
-	tz_btree *me = tz_btree_ins_left(delete, "_btr");
-	tz_btree *andme = tz_btree_ins_right(delete, "ee(): ");
-	tz_btree *e = tz_btree_ins_right(b, "d!\n");
+	assert(tz_btree_ins_left(delete, "_btr"));
+	assert(tz_btree_ins_right(delete, "ee(): "));
+	assert(tz_btree_ins_right(b, "d!\n"));
 
 	assert(t->size == 9);
 
@@ -170,6 +170,15 @@ void test_btree()
 	assert(t->size == 6);
 
 	tz_btree_free(t, 1);
+
+	t = tz_btree_init(NULL, NULL, NULL);
+	assert((t = tz_btree_push(t, NULL)));
+	assert((t = tz_btree_push(t, NULL)));
+	assert((t = tz_btree_push(t, NULL)));
+	assert((t = tz_btree_push(t, NULL)));
+	assert((t = tz_btree_push(t, NULL)));
+
+	assert(t->size == 6);
 
 	/*
 	tz_btree *t = tz_btree_init("root", NULL, NULL);

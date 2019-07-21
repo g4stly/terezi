@@ -128,6 +128,19 @@ int tz_btree_del_right(tz_btree *tree);
 tz_dlist *tz_btree_traverse_preorder(tz_btree *tree, tz_dlist *l);
 tz_dlist *tz_btree_traverse_inorder(tz_btree *tree, tz_dlist *l);
 tz_dlist *tz_btree_traverse_postorder(tz_btree *tree, tz_dlist *l);
-tz_dlist *tz_btree_traverse_levelorder(tz_btree *tree, tz_dlist *l);
+
+/*
+   this method might not be what you think
+   there is no balancing going on in this method
+   if you push A B C D E F G you'll get
+  		F
+  	       / \
+  	      D   G
+  	     / \
+  	    B   E
+  	   / \
+  	  A   C
+*/
+tz_btree *tz_btree_push(tz_btree *t, void *data);
 
 #endif

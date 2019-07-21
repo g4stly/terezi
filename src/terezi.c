@@ -483,3 +483,39 @@ tz_dlist *tz_btree_traverse_postorder(tz_btree *t, tz_dlist *l)
 
 	return l;
 }
+
+/*
+// this method might not be what you think
+// there is no balancing going on in this method
+// if you push A B C D E F G you'll get
+//		F
+//	       / \
+//	      D   G
+//	     / \
+//	    B   E
+//	   / \
+//	  A   C
+*/
+tz_btree *tz_btree_push(tz_btree *t, void *data)
+{
+	if (!t) return NULL;
+	if (!t->left) {
+		if (!t->data) {
+			t->data = data;
+			increment_size(t);
+			return t;
+		}
+		tz_btree_ins_left(t, t->data);
+		t->data = data;
+		return t;
+	}
+	if (!t->right) {
+		tz_btree_ins_right(t, data);
+		return t;
+	}
+
+	tz_btree *new_root = tz_btree_init(data, t->compare, t->destroy);
+	new_root->size = t->size + 1;
+	t->parent = new_root;
+	return new_root;
+}
