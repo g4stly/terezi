@@ -104,39 +104,30 @@ void *tz_table_rm(tz_table *t, const char *key);
  * Binary Tree
 \*/
 
-typedef struct tz_btree_node {
-	void *data;
-	struct tz_btree_node *left;
-	struct tz_btree_node *right;
-} tz_btree_node;
-
 typedef struct tz_btree {
 	int size;
-	int (*compare)(const void *key1, const void *key2);
+	void *data;
+	struct tz_btree *left;
+	struct tz_btree *right;
+	struct tz_btree *parent;
 	void (*destroy)(void *data);
-	tz_btree_node *root;
+	int (*compare)(const void *key1, const void *key2);
 } tz_btree;
 
 tz_btree *tz_btree_init(
+	void *data,
 	int (*compare)(const void *key1, const void *key2),
 	void (*destroy)(void *data));
-void tz_btree_free(tz_btree *tree);
+void tz_btree_free(tz_btree *tree, int destroy);
 
-tz_btree_node *tz_btree_ins_left(
-	tz_btree *tree, 
-	tz_btree_node *node, 
-	void *data);
-tz_btree_node *tz_btree_ins_right(
-	tz_btree *tree,
-	tz_btree_node *node,
-	void *data);
+tz_btree *tz_btree_ins_left(tz_btree *tree, void *data);
+tz_btree *tz_btree_ins_right(tz_btree *tree, void *data);
+int tz_btree_del_left(tz_btree *tree);
+int tz_btree_del_right(tz_btree *tree);
 
-int tz_btree_del_left(tz_btree *tree, tz_btree_node *node);
-int tz_btree_del_right(tz_btree *tree, tz_btree_node *node);
-
-tz_dlist *tz_btree_traverse_preorder(tz_btree *tree);
-tz_dlist *tz_btree_traverse_inorder(tz_btree *tree);
-tz_dlist *tz_btree_traverse_postorder(tz_btree *tree);
-tz_dlist *tz_btree_traverse_levelorder(tz_btree *tree);
+tz_dlist *tz_btree_traverse_preorder(tz_btree *tree, tz_dlist *l);
+tz_dlist *tz_btree_traverse_inorder(tz_btree *tree, tz_dlist *l);
+tz_dlist *tz_btree_traverse_postorder(tz_btree *tree, tz_dlist *l);
+tz_dlist *tz_btree_traverse_levelorder(tz_btree *tree, tz_dlist *l);
 
 #endif

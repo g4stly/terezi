@@ -152,71 +152,68 @@ void speak_and_destroy(void *data)
 
 void test_btree()
 {
-	tz_btree *t = tz_btree_init(NULL, speak_and_destroy);
-	assert(t);
+	tz_btree *t = tz_btree_init("He", NULL, speak_and_destroy);
+	tz_btree *a = tz_btree_ins_left(t, "ll");
+	tz_btree *b = tz_btree_ins_right(t, "rl");
+	tz_btree *c = tz_btree_ins_left(a, "o,");
+	tz_btree *d = tz_btree_ins_left(c, " wo");
+	tz_btree *delete = tz_btree_ins_left(b, "test");
+	tz_btree *me = tz_btree_ins_left(delete, "_btr");
+	tz_btree *andme = tz_btree_ins_right(delete, "ee(): ");
+	tz_btree *e = tz_btree_ins_right(b, "d!\n");
 
-	tz_btree_node *node = tz_btree_ins_left(t, NULL, "hello");
-	assert(node && t->size == 1);
-	assert(!tz_btree_ins_left(t, NULL, "junk"));
+	assert(t->size == 9);
 
-	node = tz_btree_ins_left(t, node, ", ");
-	assert(node && t->size == 2);
+	tz_btree_free(delete, 1);
+	assert(!b->left);
 
-	tz_btree_node *delete_me;
-	delete_me = tz_btree_ins_right(t, node, "world!\n");
-	assert(delete_me && t->size == 3);
+	assert(t->size == 6);
 
-	assert((node = tz_btree_ins_left(t, delete_me, "test_")));
-	assert(tz_btree_ins_left(t, node, "btr"));
-	assert(tz_btree_ins_right(t, node, "ee(): "));
-
-	assert(tz_btree_del_left(t, delete_me) && t->size == 3);
-	tz_btree_free(t);
+	tz_btree_free(t, 1);
 
 	/*
-	t = tz_btree_init(NULL, NULL);
-	tz_btree_node *root = tz_btree_ins_left(t, NULL, "root");
-	tz_btree_node *a = tz_btree_ins_left(t, root, "a");
-	tz_btree_node *b = tz_btree_ins_right(t, root, "b");
-	tz_btree_node *c = tz_btree_ins_left(t, a, "c");
-	tz_btree_node *d = tz_btree_ins_right(t, a, "d");
-	tz_btree_node *e = tz_btree_ins_left(t, b, "e");
-	tz_btree_node *f = tz_btree_ins_right(t, b, "f");
-	tz_btree_node *g = tz_btree_ins_left(t, c, "g");
-	tz_btree_node *h = tz_btree_ins_right(t, c, "h");
-	tz_btree_node *i = tz_btree_ins_left(t, d, "i");
-	tz_btree_node *j = tz_btree_ins_right(t, d, "j");
+	tz_btree *t = tz_btree_init("root", NULL, NULL);
+	tz_btree *a = tz_btree_ins_left(t, "a");
+	tz_btree *b = tz_btree_ins_right(t, "b");
+	assert(t && a && b);
 
-	tz_dlist *list;
-	tz_dlist_node *lnode;
+	tz_btree *c = tz_btree_ins_left(a, "c");
+	tz_btree *d = tz_btree_ins_right(a, "d");
+	assert(c && d);
+	tz_btree *e = tz_btree_ins_left(b, "e");
+	tz_btree *f = tz_btree_ins_right(b, "f");
+	assert(e && f);
 
-	list = tz_btree_traverse_preorder(t);
-	lnode = list->head;
-	while (lnode) {
-		printf("%s", lnode->data);
-		lnode = lnode->next;
+	tz_dlist *l;
+	tz_dlist_node *n;
+
+	l = tz_btree_traverse_preorder(t, NULL);
+	n = l->head;
+	while (n) {
+		printf("%s", n->data);
+		n = n->next;
 	}
-	tz_dlist_free(list);
+	tz_dlist_free(l);
 	printf("\n");
 
-	list = tz_btree_traverse_inorder(t);
-	lnode = list->head;
-	while (lnode) {
-		printf("%s", lnode->data);
-		lnode = lnode->next;
+	l = tz_btree_traverse_inorder(t, NULL);
+	n = l->head;
+	while (n) {
+		printf("%s", n->data);
+		n = n->next;
 	}
-	tz_dlist_free(list);
+	tz_dlist_free(l);
 	printf("\n");
 
-	list = tz_btree_traverse_postorder(t);
-	lnode = list->head;
-	while (lnode) {
-		printf("%s", lnode->data);
-		lnode = lnode->next;
+	l = tz_btree_traverse_postorder(t, NULL);
+	n = l->head;
+	while (n) {
+		printf("%s", n->data);
+		n = n->next;
 	}
-	tz_dlist_free(list);
+	tz_dlist_free(l);
 	printf("\n");
+
+	tz_btree_free(&t, 0);
 	*/
-
-	tz_btree_free(t);
 }
